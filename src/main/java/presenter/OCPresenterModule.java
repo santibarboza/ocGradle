@@ -15,9 +15,10 @@ public class OCPresenterModule {
 	    }
 	    return instance;
 	  }
-	  void startApplication() {
+	  void startApplication(String[] args) {
 	    OCPresenter presenter = getOCPresenter();
 	    OCView view = openOCWindowAndGetView(presenter);
+	    presenter.setEnableLog(verificarLog(args));
 	    presenter.setOCView(view);
 	    setPresenterToModel(presenter);
 	  }
@@ -35,5 +36,8 @@ public class OCPresenterModule {
 	    OCView view = viewModule.openOCWindow(presenter);
 	    presenter.setOCView(view);
 	    setPresenterToModel(presenter);
+	  }
+	  private void verificarLog(String[] args){
+	  	return !(args.length>0 & args[0].equals("-q"))
 	  }
 }

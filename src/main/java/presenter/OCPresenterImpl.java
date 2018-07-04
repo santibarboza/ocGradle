@@ -14,9 +14,11 @@ public class OCPresenterImpl implements OCPresenter {
 		private OCModel ocModel;
 		private OCView ocView;
 		private Archivo archivoActual;
+		private boolean enableLog;
 		
 		OCPresenterImpl(OCModel ocModel) {
 			this.ocModel = ocModel;
+			this.enableLog=true;
 		}
 		public void setOCView(OCView ocView) {
 			this.ocView = ocView;
@@ -69,13 +71,6 @@ public class OCPresenterImpl implements OCPresenter {
 			}
 			
 		}
-		/*
-		@Override
-		public void onEventCargarDesdePanel(String contenido,String direccionInicio) {
-			updateArchivoActual("Archivo del Panel",contenido);
-			realizarCompilacion(direccionInicio);
-		}
-		*/
 		private void updateArchivoActual(String filename, String contenido) {
 			try{
 				ArchivoAbstractFactory maker= ocModel.getCreadorArchivo();
@@ -127,6 +122,7 @@ public class OCPresenterImpl implements OCPresenter {
 		@Override
 		public void mostrarMensaje(String mensaje) {
 			ocView.mostrarMensaje(mensaje);
+			updateLogs("Mensaje: "+mensaje);
 		}
 		@Override
 		public String pedirDialogo(String pedido) {
@@ -150,7 +146,12 @@ public class OCPresenterImpl implements OCPresenter {
 		}
 		@Override
 		public void updateLogs(String log) {
-			ocView.updateLogs(log);
+			if(enableLog)
+				ocView.updateLogs(log);
+		}
+		@Override
+		public void setEnableLog(boolean condicion){
+			this.enableLog=condicion;
 		}
 		
 }

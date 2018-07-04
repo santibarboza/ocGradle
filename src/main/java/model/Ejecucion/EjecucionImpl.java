@@ -59,7 +59,7 @@ public class EjecucionImpl implements Ejecucion{
 		pc = (pc + 2) & 255;
 		ocModel.updatePCView(pc+"");
 		ocModel.updateInstrucionView(memoria,pc);
-		ocModel.updateLogs("Fetch:\n\t Nuevo PC="+pc+"\n\t Intruccion: "+Hexadecimal.hex(instruccion));
+		ocModel.updateLogs("Fetch:\n\t Nuevo PC="+pc+"\n\t Intruccion: "+hexaV(instruccion));
 		return instruccion;	
 	}
 	private void decode(int instruccion) throws ErrorEjecucion{	
@@ -67,12 +67,7 @@ public class EjecucionImpl implements Ejecucion{
 		leerRegistros();
 		calcularOffset();
 		protegerRegistroF();
-		String log="Decode:\n\t Opcode:"+opcode;
-		log+="\n\t RegistroD: R"+Hexadecimal.hex(registroDIndex);
-		log+="\n\t RegistroS: R"+Hexadecimal.hex(registroSIndex)+"="+Hexadecimal.hex2Dig(bufferRegistroS);
-		log+="\n\t RegistroT: R"+Hexadecimal.hex(registroTIndex)+"="+Hexadecimal.hex2Dig(bufferRegistroT);
-		log+="\n\t Direccion: 0x"+Hexadecimal.hex2Dig(addr);
-		ocModel.updateLogs(log);
+		updateLogDecode();
 	}
 	private void leerIndices(int instruccion) {
 		opcode=(instruccion>>12)&15; 
@@ -93,138 +88,91 @@ public class EjecucionImpl implements Ejecucion{
 	}
 	private void protegerRegistroF() throws ErrorEjecucion {
 		if(registroDIndex==15 && opcode!=7 && opcode!=9 && opcode!=10&& opcode!=12)
-			throw new ErrorEjecucion("El registro F es de solo lectura. error cuando pc= "+pc);
+			throw new ErrorEjecucion("El registro F es de solo lectura. error cuando pc= "+hexa(pc));
 	}
 	private boolean execute() throws ErrorEjecucion {
 		if(opcode == 0xF)
 			return false;		
 		switch(opcode){
-			case 0x0:
-				realizarAdd();
-				break;		
-			case 0x1:
-				realizarSub();
-				break;		
-			case 0x2:
-				realizarAnd();
-				break;		
-			case 0x3:
-				realizarOr();
-				break;		
-			case 0x4:
-				realizarLeftShift();
-				break;		
-			case 0x5:
-				realizarRightShift();
-				break;		
-			case 0x6:
-				realizarLoad();
-				break;		
-			case 0x7:
-				realizarStore();
-				break;
-			case 0x8:
-				realizarLda();
-				break;		
-			case 0x9:
-				realizarJumpZero();
-				break;		
-			case 0xA:
-				realizarJumpGreater();
-				break;		
-			case 0xB:
-				realizarCall();
-				break;		
-			case 0xC:
-				realizarJump();
-				break;		
-			case 0xD:
-				realizarInc();
-				break;		
-			case 0xE:
-				realizarDec();
-				break;	
+			case 0x0:realizarAdd();			break;		
+			case 0x1:realizarSub();			break;		
+			case 0x2:realizarAnd();			break;		
+			case 0x3:realizarOr();			break;		
+			case 0x4:realizarLeftShift();	break;		
+			case 0x5:realizarRightShift();	break;		
+			case 0x6:realizarLoad();		break;		
+			case 0x7:realizarStore();		break;
+			case 0x8:realizarLda();			break;		
+			case 0x9:realizarJumpZero();	break;		
+			case 0xA:realizarJumpGreater();	break;		
+			case 0xB:realizarCall();		break;		
+			case 0xC:realizarJump();		break;		
+			case 0xD:realizarInc();			break;		
+			case 0xE:realizarDec();			break;	
 			default:
-				throw new ErrorEjecucion("Opcode Invalido cuando pc= "+Hexadecimal.hex2(pc));
+				throw new ErrorEjecucion("Opcode Invalido cuando pc= "+hexa(pc));
 		}
+		updateLogExecute();
 		controlarValorRegistroD();
 		return true;
 	}
-	
-
 	private void realizarAdd() throws ErrorEjecucion {
-		bufferRegistroD=Hexadecimal.comp(bufferRegistroS)+Hexadecimal.comp(bufferRegistroT);
+		bufferRegistroD=complemento(bufferRegistroS)+complemento(bufferRegistroT);
 		if(bufferRegistroD>127 || bufferRegistroD< -128)
-			throw new ErrorEjecucion("Overflow cuando PC="+Hexadecimal.hex2Dig(pc));
-		bufferRegistroD=Hexadecimal.comp(bufferRegistroD);
-		ocModel.updateLogs("Execute: ADD \t RD<-"+Hexadecimal.hex2(bufferRegistroD));	
+			throw new ErrorEjecucion("Overflow cuando PC="+hexa(pc));
+		bufferRegistroD=complemento(bufferRegistroD);
 	}
 	private void realizarSub() throws ErrorEjecucion {
-		bufferRegistroD=Hexadecimal.comp(bufferRegistroS)-Hexadecimal.comp(bufferRegistroT);
+		bufferRegistroD=complemento(bufferRegistroS)-complemento(bufferRegistroT);
 		if(bufferRegistroD>127 || bufferRegistroD< -128)
-			throw new ErrorEjecucion("Overflow cuando PC="+Hexadecimal.hex2Dig(pc));
-		bufferRegistroD=Hexadecimal.comp(bufferRegistroD);
-		ocModel.updateLogs("Execute: SUB\n\t RD<-"+Hexadecimal.hex2(bufferRegistroD));
+			throw new ErrorEjecucion("Overflow cuando PC="+hexa(pc));
+		bufferRegistroD=complemento(bufferRegistroD);
 	}
 	private void realizarAnd() {
-		bufferRegistroD=(Hexadecimal.comp(bufferRegistroS) & Hexadecimal.comp(bufferRegistroT));
-		ocModel.updateLogs("Execute: AND\n\t RD<-"+Hexadecimal.hex2(bufferRegistroD));
+		bufferRegistroD=(complemento(bufferRegistroS) & complemento(bufferRegistroT));
 	}
 	private void realizarOr() {
-		bufferRegistroD=(Hexadecimal.comp(bufferRegistroS) ^ Hexadecimal.comp(bufferRegistroT));	
-		ocModel.updateLogs("Execute: OR\n\t RD<-"+Hexadecimal.hex2(bufferRegistroD));
+		bufferRegistroD=(complemento(bufferRegistroS) ^ complemento(bufferRegistroT));
 	}
 	private void realizarLeftShift() {
 		bufferRegistroD=(bufferRegistroS<<bufferRegistroT) & 256;
-		ocModel.updateLogs("Execute: LSHIFT\n\t RD<-"+Hexadecimal.hex2(bufferRegistroD));
 	}
 	private void realizarRightShift() {
 		bufferRegistroD=(bufferRegistroS>>bufferRegistroT) & 256;
-		ocModel.updateLogs("Execute: RSHIFT\n\t RD<-"+Hexadecimal.hex2(bufferRegistroD));
 	}
 	private void realizarLoad() throws ErrorEjecucion {
-		desplazamiento=(bufferRegistroS+Hexadecimal.comp(offset));
-		ocModel.updateLogs("Execute: Load\n\t direccionEfectiva<-"+Hexadecimal.hex2(desplazamiento));
-		
+		desplazamiento=(bufferRegistroS+complemento(offset));		
 	}
 	private void realizarStore() {
-		desplazamiento=bufferRegistroD+Hexadecimal.comp(offset);
-		ocModel.updateLogs("Execute: Store\n\t direccionEfectiva<-"+Hexadecimal.hex2(desplazamiento));
+		desplazamiento=bufferRegistroD+complemento(offset);
 	}
 	private void realizarLda() {
 		bufferRegistroD=addr;
-		ocModel.updateLogs("Execute: LDA\n\t RD<-"+Hexadecimal.hex2(bufferRegistroD));
 	}
 	private void realizarJumpZero() {
 		condicion= (bufferRegistroD==0);
-		ocModel.updateLogs("Execute: JZ\n\t condicion="+condicion);
 	}
 	private void realizarJumpGreater() {
-		condicion=(Hexadecimal.comp(bufferRegistroD)>0);
-		ocModel.updateLogs("Execute: JG\n\t condicion="+condicion);
+		condicion=(complemento(bufferRegistroD)>0);
 	}
 	private void realizarCall() {
 		bufferRegistroD=pc;
 		pc=addr;
 		ocModel.updatePCView(pc+"");
-		ocModel.updateLogs("Execute: CALL\n\t NuevoPC="+Hexadecimal.hex2(pc));
 	}
 	private void realizarJump() {
 		pc=bufferRegistroD;
 		ocModel.updatePCView(pc+"");
-		ocModel.updateLogs("Execute: JUMP\n\t NuevoPC="+Hexadecimal.hex2(pc));
 	}
 	private void realizarInc() {
-		bufferRegistroD=(Hexadecimal.comp(bufferRegistroD)+1) & 255;
-		ocModel.updateLogs("Execute: INC\n\t RD<-"+Hexadecimal.hex2(bufferRegistroD));
+		bufferRegistroD=(complemento(bufferRegistroD)+1) & 255;
 	}
 	private void realizarDec(){
-		bufferRegistroD=(Hexadecimal.comp(bufferRegistroD)-1) & 255;
-		ocModel.updateLogs("Execute: DEC\n\t RD<-"+Hexadecimal.hex2(bufferRegistroD));
+		bufferRegistroD=(complemento(bufferRegistroD)-1) & 255;
 	}
 	private void controlarValorRegistroD() throws ErrorEjecucion {
 		if(bufferRegistroD>255 || bufferRegistroD<-128)
-			throw new ErrorEjecucion("Overflow cuando PC="+Hexadecimal.hex2(pc));
+			throw new ErrorEjecucion("Overflow cuando PC="+hexa(pc));
 	}
 	private void memory() throws ErrorEjecucion{
 		if(esBranch())
@@ -233,42 +181,32 @@ public class EjecucionImpl implements Ejecucion{
 			MemoryLoad();
 		else if(esStore())
 			MemoryStore();
-		else
-			ocModel.updateLogs("Memory: NOP");
 	}
 	private boolean esBranch(){
 		return(opcode==9)||(opcode==10);
 	}
 	private void MemoryBranch(){
 		if(condicion)
-			pc=pc+Hexadecimal.comp(addr);
+			pc=pc+complemento(addr);
 		ocModel.updatePCView(pc+"");
-		ocModel.updateLogs("Memory: Branch\n\t PC="+Hexadecimal.hex2(pc));
 	}
 	private boolean esLoad(){
 		return (opcode==6);
 	}
 	private void MemoryLoad() throws ErrorEjecucion{
-		if(esInteraccionConUsuario()){
+		if(esInteraccionConUsuario())
 			read();
-			ocModel.updateLogs("Memory: LOAD - Read()\n\t RD="+Hexadecimal.hex2(bufferRegistroD));
-		}
-		else{
+		else
 			bufferRegistroD=memoria.leerMemoria(desplazamiento);
-			ocModel.updateLogs("Memory: LOAD\n\t RD="+Hexadecimal.hex2(bufferRegistroD));
-		}
 	}
 	private boolean esStore(){
 		return (opcode==7);
 	}
 	private void MemoryStore(){
-		if(esInteraccionConUsuario()){
-			ocModel.mostrarMensaje(" Salida =  "+Hexadecimal.hex2(bufferRegistroS)+" = ("+Hexadecimal.comp(bufferRegistroS)+")d");
-			ocModel.updateLogs("Memory: Store - print()\n\t RD="+Hexadecimal.hex2(bufferRegistroD));
-		}else{
+		if(esInteraccionConUsuario())
+			ocModel.mostrarMensaje(" Salida =  "+hexa(bufferRegistroS)+" = ("+complemento(bufferRegistroS)+")d");
+		else
 			memoria.escribirMemoria(desplazamiento, bufferRegistroS);
-			ocModel.updateLogs("Memory: Store\n\t RD="+Hexadecimal.hex2(bufferRegistroD));
-		}
 	}
 	private boolean esInteraccionConUsuario(){
 		return desplazamiento==255;
@@ -290,6 +228,68 @@ public class EjecucionImpl implements Ejecucion{
 		ocModel.updateMemoria();
 		ocModel.updateRegistros();
 		ocModel.updateLogs("WriteBack: Se actualizo RD\n");
+	}
+	private void updateLogDecode(){
+		String log="Decode:\n\t Opcode:"+opcode;
+		log+="\n\t RegistroD: R"+hexaV(registroDIndex);
+		log+="\n\t RegistroS: R"+hexaV(registroSIndex)+"="+Hexadecimal.hex2Dig(bufferRegistroS);
+		log+="\n\t RegistroT: R"+hexaV(registroTIndex)+"="+Hexadecimal.hex2Dig(bufferRegistroT);
+		log+="\n\t Direccion: 0x"+Hexadecimal.hex2Dig(addr);
+		ocModel.updateLogs(log);
+	}
+	private void updateLogExecute(){
+		String log="Execute: ";
+		switch(opcode){
+			case 0x0:log+="ADD\n\t RD<-"+hexa(bufferRegistroD);	break;		
+			case 0x1:log+="SUB\n\t RD<-"+hexa(bufferRegistroD);	break;		
+			case 0x2:log+="AND\n\t RD<-"+hexa(bufferRegistroD);	break;		
+			case 0x3:log+="OR\n\t RD<-"+hexa(bufferRegistroD);	break;		
+			case 0x4:log+="LSHIFT\n\t RD<-"+hexa(bufferRegistroD);	break;		
+			case 0x5:log+="RSHIFT\n\t RD<-"+hexa(bufferRegistroD);	break;		
+			case 0x6:log+="Load\n\t DireccionEfectiva<-" +hexa(desplazamiento);		break;		
+			case 0x7:log+="Store\n\t DireccionEfectiva<-"+hexa(desplazamiento);		break;
+			case 0x8:log+="LDA\n\t RD<-"+hexa(bufferRegistroD);	break;		
+			case 0x9:log+="JZ\n\t condicion="+condicion;	break;		
+			case 0xA:log+="JG\n\t condicion="+condicion;	break;		
+			case 0xB:log+="CALL\n\t NuevoPC="+hexa(pc);			break;		
+			case 0xC:log+="JUMP\n\t NuevoPC="+hexa(pc);			break;		
+			case 0xD:log+="INC\n\t RD<-"+hexa(bufferRegistroD);	break;		
+			case 0xE:log+="DEC\n\t RD<-"+hexa(bufferRegistroD);	break;
+		}
+		ocModel.updateLogs(log);
+	}
+	private void updateLogMemory(){
+		String log="Memory: ";
+		if(esBranch())
+			log+="Branch\n\t PC="+hexa(pc);
+		else if(esLoad())
+				log+=logLoad();				
+		else if(esStore())
+				log+=logStore();
+		else
+			log+="Memory: NOP"
+		ocModel.updateLogs(log);
+	}
+	private String logLoad(){
+		Sting log="Load"
+		if(esInteraccionConUsuario())
+			log+="- Read()";
+		log+="\n\t RD="+hexa(bufferRegistroD);
+	}
+	private String logStore(){
+		Sting log="Store"
+		if(esInteraccionConUsuario())
+			log+="- Print()";
+		log+="\n\t RD="+hexa(bufferRegistroD);
+	}
+	private String hexa(int i){
+		return Hexadecimal.hex2(i);
+	}
+	private String hexaV(int i){
+		return Hexadecimal.hex(i);
+	} 
+	private int complemento(int i){
+		return Hexadecimal.comp(i);
 	}
 	@Override
 	public void setModel(OCModel ocModel) {
