@@ -271,13 +271,13 @@ public class EjecucionImpl implements Ejecucion{
 		ocModel.updateLogs(log);
 	}
 	private String logLoad(){
-		Sting log="Load"
+		Sting log="Load";
 		if(esInteraccionConUsuario())
 			log+="- Read()";
 		log+="\n\t RD="+hexa(bufferRegistroD);
 	}
 	private String logStore(){
-		Sting log="Store"
+		Sting log="Store";
 		if(esInteraccionConUsuario())
 			log+="- Print()";
 		log+="\n\t RD="+hexa(bufferRegistroD);
