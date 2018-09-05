@@ -37,7 +37,7 @@ public class OCPresenterModule {
 	    presenter.setOCView(view);
 	    setPresenterToModel(presenter);
 	  }
-	  private void verificarLog(String[] args){
+	  private boolean verificarLog(String[] args){
 	  	return !(args.length>0 & args[0].equals("-q"));
 	  }
 }
