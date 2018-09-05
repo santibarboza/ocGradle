@@ -3,7 +3,7 @@ package model.Analizadores;
 import java.util.Hashtable;
 
 public class ReglasImpl implements Reglas{
-	protected static ReglasImpl r=null;
+	protected static ReglasImpl instancia=null;
 	protected static Hashtable<String,Integer>opcodes;
 	protected static Hashtable<Integer,String>opcodesInv;
 	protected static Hashtable<Character,String> casosTriviales;
@@ -13,9 +13,9 @@ public class ReglasImpl implements Reglas{
 		cargarTriviales();
 	}
 	public static ReglasImpl getInstance(){
-		if(r==null)
-			r=new ReglasImpl();
-		return r;
+		if(instancia==null)
+			instancia=new ReglasImpl();
+		return instancia;
 	}
 	protected void cargarSentencias(){
 		opcodes= new Hashtable<String,Integer>();

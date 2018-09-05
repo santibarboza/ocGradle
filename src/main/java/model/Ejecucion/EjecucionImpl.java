@@ -267,7 +267,7 @@ public class EjecucionImpl implements Ejecucion{
 		else if(esStore())
 				log+=logStore();
 		else
-			log+="Memory: NOP"
+			log+="Memory: NOP";
 		ocModel.updateLogs(log);
 	}
 	private String logLoad(){
