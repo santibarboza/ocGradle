@@ -1,15 +1,15 @@
 # ocGradle
-Es la impementacion del interprete de la Arquitectura OCUNS desarollada previamente en el proyecto OC_MVP, 
-pero buildeada con gradle.
+Es la implementacion del interprete de la Arquitectura OCUNS desarollada previamente en el proyecto OC_MVP, 
+pero realizada con gradle.
 
 Casos de Prueba:
-https://drive.google.com/open?id=0B1LhcfOJ86AvUnBlVlRaa1VmR2M
+https://tinyurl.com/OCUNS-casosdePrueba
 
 Diagrama UML (realizado de a capas desde la Arquitectura general al diagrama detallado) de Draw.io:
-https://drive.google.com/file/d/1zagI9ASDrHTCWrMyUSN9QBSqiPbp2_d_/view?usp=sharing
+https://santibarboza.github.io/ocunsUML/
 
 Manual de Usuario:
-https://drive.google.com/open?id=1d88aKV7FFeUP-Z0gJYWSws03PyCT9a5m
+https://tinyurl.com/OCUNS-manualdeUsuario
 
 Manual Técnico:
-https://drive.google.com/file/d/19NneTUEdgGDVsLQK9CN9UIIFDVv8tKjz/view?usp=sharing
+https://tinyurl.com/OCUNS-manualTecnico
