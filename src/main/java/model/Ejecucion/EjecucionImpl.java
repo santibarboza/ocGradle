@@ -182,6 +182,7 @@ public class EjecucionImpl implements Ejecucion{
 			MemoryLoad();
 		else if(esStore())
 			MemoryStore();
+		updateLogMemory();
 	}
 	private boolean esBranch(){
 		return(opcode==9)||(opcode==10);
