@@ -1,5 +1,5 @@
 # ocGradle
-Es la implementacion del interprete de la Arquitectura OCUNS desarollada previamente en el proyecto OC_MVP, 
+Es la implementacion del interprete de la Arquitectura OCUNS, subida previamente en el proyecto OC_MVP, 
 pero realizada con gradle.
 
 Casos de Prueba:
