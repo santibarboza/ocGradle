@@ -38,6 +38,6 @@ public class OCPresenterModule {
 	    setPresenterToModel(presenter);
 	  }
 	  private boolean verificarLog(String[] args){
-	  	return !(args.length>0 & args[0].equals("-q"));
+	  	return !(args.length>0 && args[0].equals("-q"));
 	  }
 }
