@@ -41,10 +41,7 @@ public class VentanaHelp extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-        JTabbedPane pestanias=new JTabbedPane();
-        
         JPanel panel3=new JPanel();
-        pestanias.addTab("Modo de uso", panel3);
         panel3.setLayout(null);
         
         JButton btnAbrirNuevoArchivo = new JButton("Abrir Nuevo Archivo");
@@ -97,33 +94,16 @@ public class VentanaHelp extends JFrame {
 		lbl2.setBounds(147, 250, 400, 17);
 		panel3.add(lbl2);
 		
-		JLabel lblLaInterfazGrfica = new JLabel("La Interfaz Gráfica posee los Siguientes Botones:");
-		lblLaInterfazGrfica.setFont(new Font("Dialog", Font.BOLD, 16));
+		JLabel lblLaInterfazGrfica = new JLabel("La Interfaz Gráfica posee\n los Siguientes Botones:");
+		lblLaInterfazGrfica.setFont(new Font("Dialog", Font.BOLD, 12));
 		lblLaInterfazGrfica.setBounds(12, 12, 427, 22);
 		panel3.add(lblLaInterfazGrfica);
 		
 		JLabel lbl3 = new JLabel("Para Obtener mas Información, Consulta el Manual de Usuario");
 		lbl3.setBounds(12, 365, 560, 17);
-		panel3.add(lbl3);
+		panel3.add(lbl3);    
 
-		//URL lbl4 = new URL();
-		//lbl4.setURL("http://www.google.com.ar");
-		//lbl4.setText("Aqui");
-		//lbl4.setBounds(405, 365, 560, 17);
-		//panel3.add(lbl4);
-//
-
-		Imagen img1= new Imagen("/view/help/Imagenes/img1.png",30,5,false);
-        pestanias.addTab("Set de Intrucciones", img1);
-
-        JPanel panel2=new JPanel();
-        Imagen img2= new Imagen("/view/help/Imagenes/img2.png",300,5,true);
-        panel2.setLayout(new BorderLayout(0, 0));
-        panel2.add(img2, BorderLayout.CENTER);
-        pestanias.addTab("Formato de Instruccion", panel2);
-//  */      
-
-        contentPane.add(pestanias);
+        contentPane.add(panel3);
 		
 		contentPane.repaint();
 	}

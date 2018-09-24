@@ -63,7 +63,7 @@ set CMD_LINE_ARGS=%*
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\ocgradle-2.0.jar
+set CLASSPATH=%APP_HOME%\lib\ocgradle-2.1.jar
 
 @rem Execute ocgradle
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %OCGRADLE_OPTS%  -classpath "%CLASSPATH%" presenter.Main %CMD_LINE_ARGS%
