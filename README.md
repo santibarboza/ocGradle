@@ -13,3 +13,6 @@ https://tinyurl.com/OCUNS-manualdeUsuario
 
 Manual Técnico:
 https://tinyurl.com/OCUNS-manualTecnico
+
+Jar del programa:
+https://github.com/santibarboza/ocGradle/blob/master/build/libs/ocgradle-2.1.jar
