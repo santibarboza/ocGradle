@@ -188,7 +188,7 @@ public class AnalizadorSintacticoySemanticoImpl implements AnalizadorSintacticoy
 			throw new ErrorSintactico(Error(posibles));
 	}
 	private String Error(String esperado){
-		return"Error Sintactico ("+tokenActual.get_NroLinea()+":"+tokenActual.get_NroCol()+")= Se esperaba "+esperado+" y se encontro un "+explicacionDeSimbolos.get(tokenActual.get_IDTOKEN())+" "+tokenActual.get_Lexema();
+		return"Error Sintactico ("+tokenActual.get_NroLinea()+":"+tokenActual.get_NroCol()+")= Se esperaba "+esperado+" y se encontro "+explicacionDeSimbolos.get(tokenActual.get_IDTOKEN())+" L: "+tokenActual.get_Lexema();
 	}
 	private boolean esIgual(String txt){
 		return tokenActual.get_IDTOKEN().equals(txt);
