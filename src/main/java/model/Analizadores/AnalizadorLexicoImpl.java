@@ -207,7 +207,7 @@ public class AnalizadorLexicoImpl implements AnalizadorLexico {
 		return indexLine<lineaLeida.length() && (esLetra()||esDigito()|| esGuionBajo()); 
 	}
 	private boolean esGuionBajo() {
-		return lineaLeida.lastIndexOf(indexLine)=='_';
+		return caracterActual()=='_';
 	}
 		private Token findeArchivo(){
 		archivo.Close();
